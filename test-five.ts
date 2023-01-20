@@ -1,6 +1,9 @@
-// Request
-
 type TypeOfAnimal = "cat" | "dog" | "bird";
+
+enum StatusResponseOfData {
+  StatusAnimel = "available",
+  StatusNotAnimal = "not available",
+}
 
 interface AnimalData {
   animal: TypeOfAnimal;
@@ -8,63 +11,42 @@ interface AnimalData {
   sterilized?: string;
 }
 
-const animalData: AnimalData = {
-  animal: "cat",
-  breed: "abyssinian",
-  sterilized: "yes",
-};
-
-// Response #1
-
-interface AnimaStatusAvailble {
-  status: "available";
-  data: {
-    animal: TypeOfAnimal;
-    breed: string;
-    sterilized?: string;
-    location: string;
-    age?: number;
-  };
+interface AnimalAvailbleData extends AnimalData {
+  location: string;
+  age?: number;
 }
 
-const animaStatusAvailble: AnimaStatusAvailble = {
-  status: "available",
-  data: {
-    animal: "cat",
-    breed: "Abyssinian",
-    sterilized: "yes",
-    location: "american",
-    age: 2,
-  },
-};
-
-// Response #2
-
-interface AnimalStatesNotAvailble {
-  status: "not available";
-  data: {
-    message: string;
-    nextUpdateIn: Date;
-  };
+interface AnimalNotAvailbleData {
+  message: string;
+  nextUpdateIn: Date;
 }
 
-const animalStatesNotAvailble: AnimalStatesNotAvailble = {
-  status: "not available",
-  data: {
-    message: "don't have",
-    nextUpdateIn: new Date(2023, 11, 17),
-  },
-};
+interface AvailableRequestOfDataAnimal {
+  status: StatusResponseOfData.StatusAnimel;
+  data: AnimalAvailbleData;
+}
 
-function checkAnimalData(
-  animal: AnimaStatusAvailble | AnimalStatesNotAvailble
-): string {
-  if (animal.status === "available") {
-    // Заменить условие!
-    return `Animal: ${animal.data.animal} breed: ${animal.data.breed} age: ${animal.data.age}`;
+interface NotAvailableRequestOfDataAnimal {
+  status: StatusResponseOfData.StatusNotAnimal;
+  data: AnimalNotAvailbleData;
+}
+
+type Responses = AvailableRequestOfDataAnimal | NotAvailableRequestOfDataAnimal;
+
+function isAvailable(
+  responses: Responses
+): responses is AvailableRequestOfDataAnimal {
+  if (responses.status === StatusResponseOfData.StatusAnimel) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function checkAnimalData(animal: Responses): AnimalAvailbleData | string {
+  if (isAvailable(animal)) {
+    return animal.data;
   } else {
     return `${animal.data.message}, you can try in ${animal.data.nextUpdateIn}`;
   }
 }
-
-console.log(checkAnimalData(animalStatesNotAvailble));

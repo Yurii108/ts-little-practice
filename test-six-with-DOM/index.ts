@@ -1,8 +1,8 @@
-const inputEmail = document.querySelector("#email") as HTMLInputElement,
-  inputTitle = document.querySelector("#title") as HTMLInputElement,
-  textArea = document.querySelector("#text") as HTMLTextAreaElement,
-  checkBox = document.querySelector("#checkbox") as HTMLFormElement,
-  buttons = document.querySelectorAll(".btn");
+const inputEmail = document.querySelector("#email") as HTMLInputElement;
+const inputTitle = document.querySelector("#title") as HTMLInputElement;
+const textArea = document.querySelector("#text") as HTMLTextAreaElement;
+const checkBox = document.querySelector("#checkbox") as HTMLFormElement;
+const buttons = document.querySelectorAll(".btn");
 
 interface FormOfData {
   email: string;

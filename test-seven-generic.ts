@@ -5,9 +5,9 @@ interface PlayerOfHours {
   inMenu: number;
 }
 
-interface PlayerData<H extends PlayerOfHours | number | string> {
+interface PlayerData<T extends PlayerOfHours | number | string> {
   game: string | number;
-  hours: H;
+  hours: T;
   server: string;
 }
 
@@ -27,7 +27,7 @@ const player3: PlayerData<PlayerOfHours> = {
   game: "Chess",
   hours: {
     total: 500,
-    inMenu: 50,
+    inMenu: 23,
   },
   server: "chess",
 };
@@ -48,9 +48,32 @@ interface AmountOfFigures {
   others: number;
 }
 
-function calculateAmountOfFigures(figure): AmountOfFigures {}
+function calculateAmountOfFigures(figure: FiguresData[]): AmountOfFigures {
+  const sumAllFigures: AmountOfFigures = {
+    squares: 0,
+    circles: 0,
+    triangles: 0,
+    others: 0,
+  };
 
-const data = [
+  for (let name of figure) {
+    if (name.name == "circle") sumAllFigures.circles++;
+    if (name.name == "rect") sumAllFigures.squares++;
+    if (name.name == "triangle") sumAllFigures.triangles++;
+    if (name.name == "line") sumAllFigures.others++;
+  }
+
+  return sumAllFigures;
+}
+
+type NameOfFigures = "rect" | "triangle" | "circle" | "line";
+
+interface FiguresData {
+  name: NameOfFigures;
+  data?: object;
+}
+
+const data: FiguresData[] = [
   {
     name: "rect",
     data: { a: 5, b: 10 },

@@ -1,29 +1,24 @@
 // Создать Generic-интерфейс PlayerData, который подходил бы для создания таких объектов:
 
-interface PlayerOfHours {
-  total: number;
-  inMenu: number;
-}
-
-interface PlayerData<T extends PlayerOfHours | number | string> {
-  game: string | number;
-  hours: T;
+interface PlayerData<Game, Hours> {
+  game: Game;
+  hours: Hours;
   server: string;
 }
 
-const player1: PlayerData<number> = {
+const player1: PlayerData<string, number> = {
   game: "CS:GO",
   hours: 300,
   server: "basic",
 };
 
-const player2: PlayerData<string> = {
+const player2: PlayerData<number, string> = {
   game: 2048,
   hours: "300 h.",
   server: "arcade",
 };
 
-const player3: PlayerData<PlayerOfHours> = {
+const player3: PlayerData<string, object> = {
   game: "Chess",
   hours: {
     total: 500,
@@ -48,7 +43,21 @@ interface AmountOfFigures {
   others: number;
 }
 
-function calculateAmountOfFigures(figure: FiguresData[]): AmountOfFigures {
+enum NameOfFigures {
+  Rect = "rect",
+  Triangle = "triangle",
+  Circle = "circle",
+  Line = "line",
+}
+
+interface FiguresData {
+  name: NameOfFigures;
+  data?: object;
+}
+
+function calculateAmountOfFigures<T extends FiguresData>(
+  figure: T[]
+): AmountOfFigures {
   const sumAllFigures: AmountOfFigures = {
     squares: 0,
     circles: 0,
@@ -56,54 +65,57 @@ function calculateAmountOfFigures(figure: FiguresData[]): AmountOfFigures {
     others: 0,
   };
 
-  for (let name of figure) {
-    if (name.name == "circle") sumAllFigures.circles++;
-    if (name.name == "rect") sumAllFigures.squares++;
-    if (name.name == "triangle") sumAllFigures.triangles++;
-    if (name.name == "line") sumAllFigures.others++;
-  }
+  figure.forEach((elem) => {
+    switch (elem.name) {
+      case NameOfFigures.Circle:
+        sumAllFigures.circles++;
+        break;
+      case NameOfFigures.Rect:
+        sumAllFigures.squares++;
+        break;
+      case NameOfFigures.Triangle:
+        sumAllFigures.triangles++;
+        break;
+      default:
+        sumAllFigures.others++;
+        break;
+    }
+  });
 
   return sumAllFigures;
 }
 
-type NameOfFigures = "rect" | "triangle" | "circle" | "line";
-
-interface FiguresData {
-  name: NameOfFigures;
-  data?: object;
-}
-
 const data: FiguresData[] = [
   {
-    name: "rect",
+    name: NameOfFigures.Rect,
     data: { a: 5, b: 10 },
   },
   {
-    name: "rect",
+    name: NameOfFigures.Rect,
     data: { a: 6, b: 11 },
   },
   {
-    name: "triangle",
+    name: NameOfFigures.Triangle,
     data: { a: 5, b: 10, c: 14 },
   },
   {
-    name: "line",
+    name: NameOfFigures.Line,
     data: { l: 15 },
   },
   {
-    name: "circle",
+    name: NameOfFigures.Circle,
     data: { r: 10 },
   },
   {
-    name: "circle",
+    name: NameOfFigures.Circle,
     data: { r: 5 },
   },
   {
-    name: "rect",
+    name: NameOfFigures.Rect,
     data: { a: 15, b: 7 },
   },
   {
-    name: "triangle",
+    name: NameOfFigures.Triangle,
   },
 ];
 

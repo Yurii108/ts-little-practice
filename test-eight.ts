@@ -46,15 +46,15 @@ interface IPhonesManufacturedAfterDate extends IMobilePhone {
 // с телефонами, выпущенными после даты в третьем аргументе
 //IPhonesManufacturedAfterDate[]
 
-function filterPhonesByDate<T, K extends keyof T>(
-  phones: T[],
-  key: K,
-  initial: string
-) {
+function filterPhonesByDate<
+  T extends Partial<IPhonesManufacturedAfterDate>,
+  K extends keyof T
+>(phones: T[], key: K, initial: string) {
   const data = [];
 
   for (let k of phones) {
     if (k[key] > new Date(initial)) {
+      k.initialDate = initial;
       data.push(k);
     }
   }

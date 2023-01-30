@@ -46,20 +46,25 @@ interface IPhonesManufacturedAfterDate extends IMobilePhone {
 // с телефонами, выпущенными после даты в третьем аргументе
 //IPhonesManufacturedAfterDate[]
 
-function filterPhonesByDate<
-  T extends Partial<IPhonesManufacturedAfterDate>,
-  K extends keyof T
->(phones: T[], key: K, initial: string) {
-  const data = [];
-
-  for (let k of phones) {
-    if (k[key] > new Date(initial)) {
-      k.initialDate = initial;
-      data.push(k);
-    }
-  }
-
-  return data;
+function filterPhonesByDate(
+  phones: IMobilePhone[],
+  key: keyof IMobilePhone,
+  initial: string
+): IPhonesManufacturedAfterDate[] {
+  return phones
+    .filter((phone) => {
+      const propOfArgument = phone[key];
+      if (
+        propOfArgument instanceof Date &&
+        propOfArgument > new Date(initial)
+      ) {
+        return phone;
+      }
+    })
+    .map((item) => {
+      const newObj = { ...item, initialDate: initial };
+      return newObj;
+    });
 }
 
 // Второй аргумент при вызове функции должен быть связан с первым,

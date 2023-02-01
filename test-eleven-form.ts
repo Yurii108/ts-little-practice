@@ -1,19 +1,16 @@
 interface IForm {
-  login: ILogin | string;
-  password: Password;
+  login: string;
+  password: string;
 }
-
-interface ILogin {
-  isValid: boolean;
-  errorMsg: string;
-}
-
-type Password = Omit<ILogin, "errorMsg">;
 // Необходимо типизировать объект валидации
 // Учтите, что данные в форме могут расширяться и эти поля
 // должны появиться и в объекте валидации
 
-const validationData: IForm = {
+const validationData: Validator<IForm> = {
   login: { isValid: false, errorMsg: "At least 3 characters" },
   password: { isValid: true },
+};
+
+type Validator<T> = {
+  [P in keyof T]: { isValid: true } | { isValid: false; errorMsg: string };
 };

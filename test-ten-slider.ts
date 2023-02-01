@@ -25,19 +25,12 @@ createSlider();
 // от интерфейса ISlider
 // Все поля в нем обязательны для заполнения
 
-type SliderWithoutAnimName = Omit<ISlider, "animationName" | "speed">;
-
-interface ICustomSliderAddSpeed extends SliderWithoutAnimName {
+type SliderWithoutAnimName = Required<Omit<ISlider, "animationName" | "speed">>;
+interface ICustomSlider extends SliderWithoutAnimName {
   speed: number;
 }
 
-type CopyCustomSlider<T> = {
-  [P in keyof T]-?: T[P];
-};
-
-type CreateCustomSlider = CopyCustomSlider<ICustomSliderAddSpeed>;
-
-const customSliderOptions: CreateCustomSlider = {
+const customSliderOptions: ICustomSlider = {
   container: "id",
   numberOfSlides: 4,
   speed: 1100,
@@ -46,9 +39,7 @@ const customSliderOptions: CreateCustomSlider = {
   arrows: true,
 };
 
-function createCustomSlider(
-  options: CreateCustomSlider
-): CreateCustomSlider | string {
+function createCustomSlider(options: ICustomSlider): ICustomSlider | string {
   if ("container" in options) {
     console.log(options);
     return options;
